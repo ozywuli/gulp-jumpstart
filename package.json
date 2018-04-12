@@ -2,7 +2,7 @@
   "name": "gulp-plugin-starter",
   "version": "0.0.1",
   "description": "Gulp starter template for plugin development",
-  "main": "index.js",
+  "main": "GulpPluginStarter.js",
   "author": "Ozy Wu-Li <ozy.wu.li@gmail.com>",
   "homepage": "https://github.com/ozywuli/gulp-plugin-starter",
   "scripts": {
