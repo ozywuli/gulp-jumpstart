@@ -1,16 +1,16 @@
 {
-  "name": "gulp-plugin-starter",
+  "name": "gulp-scaffold",
   "version": "0.0.1",
   "description": "Gulp starter template for plugin development",
-  "main": "GulpPluginStarter.js",
+  "main": "GulpScaffold.js",
   "author": "Ozy Wu-Li <ozy.wu.li@gmail.com>",
-  "homepage": "https://github.com/ozywuli/gulp-plugin-starter",
+  "homepage": "https://github.com/ozywuli/gulp-scaffold",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:ozywuli/gulp-plugin-starter.git"
+    "url": "git@github.com:ozywuli/gulp-scaffold.git"
   },
   "license": "MIT",
   "keywords": [
@@ -19,7 +19,7 @@
     "javascript"
   ],
   "bugs": {
-    "url": "https://github.com/ozywuli/mapboxgl-choropleth/issues"
+    "url": "https://github.com/ozywuli/scaffold/issues"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.3",
@@ -27,7 +27,6 @@
     "babelify": "^7.3.0",
     "browser-sync": "^2.18.13",
     "browserify": "^14.5.0",
-    "gulp": "^3.9.1",
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
