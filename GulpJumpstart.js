@@ -1,4 +1,3 @@
-const gulp = require('gulp')
 const path = require('path')
 
 const autoprefixer = require('autoprefixer')
@@ -16,7 +15,7 @@ const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
 const util = require('gulp-util')
 
-function GulpPluginStarter(userOptions) {
+function GulpJumpstart(userOptions) {
 
     let defaultOptions = {
         pluginName: 'Plugin',
@@ -105,4 +104,4 @@ function GulpPluginStarter(userOptions) {
     gulp.task('default', ['watch'])
 }
 
-export default GulpPluginStarter;
+export default GulpJumpstart;

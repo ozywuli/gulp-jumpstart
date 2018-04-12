@@ -1,16 +1,16 @@
 {
-  "name": "gulp-scaffold",
+  "name": "gulp-jumpstsart",
   "version": "0.0.1",
-  "description": "Gulp starter template for plugin development",
-  "main": "GulpScaffold.js",
+  "description": "Gulp starter template for Javascript plugin development",
+  "main": "GulpJumpstart.js",
   "author": "Ozy Wu-Li <ozy.wu.li@gmail.com>",
-  "homepage": "https://github.com/ozywuli/gulp-scaffold",
+  "homepage": "https://github.com/ozywuli/gulp-jumpstart",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:ozywuli/gulp-scaffold.git"
+    "url": "git@github.com:ozywuli/gulp-jumpsart.git"
   },
   "license": "MIT",
   "keywords": [
@@ -19,7 +19,7 @@
     "javascript"
   ],
   "bugs": {
-    "url": "https://github.com/ozywuli/scaffold/issues"
+    "url": "https://github.com/ozywuli/gulp-jumpstart/issues"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.3",
