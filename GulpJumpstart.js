@@ -15,7 +15,9 @@ const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
 const util = require('gulp-util')
 
-function GulpJumpstart(userOptions) {
+console.log(babelify);
+
+function GulpJumpstart(gulp, userOptions) {
 
     let defaultOptions = {
         pluginName: 'Plugin',
@@ -104,4 +106,4 @@ function GulpJumpstart(userOptions) {
     gulp.task('default', ['watch'])
 }
 
-export default GulpJumpstart;
+module.exports = GulpJumpstart;
