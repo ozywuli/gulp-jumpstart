@@ -15,16 +15,29 @@ const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
 const util = require('gulp-util')
 
-console.log(babelify);
-
+/**
+ * Constructor
+ * 
+ */
 function GulpJumpstart(gulp, userOptions) {
 
     let defaultOptions = {
         pluginName: 'Plugin',
-        standalone: 'Plugin'
+        standalone: 'Plugin',
+        includePaths: undefined
     };
 
     let options = Object.assign(defaultOptions, userOptions);
+    let includePaths = ['.', 'node_modules'];
+    let standalone = options.standalone;
+
+    if (options.includePaths) {
+        includePaths = includePaths.concat(options.includePaths);
+    }
+
+    if (options.pluginName !== options.standalone) {
+        standalone = options.standalone;
+    }
 
     gulp.task('clean', (cb) => {
         rimraf('./dist', cb)
@@ -41,7 +54,6 @@ function GulpJumpstart(gulp, userOptions) {
             sound: 'Basso'
         })
         console.log(arg)
-        this.emit('end')
     }
 
     gulp.task('build:scss', () => {
@@ -53,7 +65,6 @@ function GulpJumpstart(gulp, userOptions) {
             onError: showError
         }).on('error', function(error) {
             showError(error)
-            this.emit('end')
         }))
         .pipe(postcss([
             autoprefixer({
@@ -68,7 +79,7 @@ function GulpJumpstart(gulp, userOptions) {
         return browserify({
                 entries: path.join('src', `${options.pluginName}.js`), 
                 debug: false, 
-                standalone: options.standalone
+                standalone: standalone
             })
             .transform("babelify", {
                 presets: ["es2015"]
