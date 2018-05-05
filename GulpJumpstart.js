@@ -23,21 +23,26 @@ function GulpJumpstart(gulp, userOptions) {
 
     let defaultOptions = {
         pluginName: 'Plugin',
-        standalone: 'Plugin',
+        standalone: undefined,
         includePaths: undefined
     };
 
     let options = Object.assign(defaultOptions, userOptions);
     let includePaths = ['.', 'node_modules'];
-    let standalone = options.standalone;
+    let standalone;
 
     if (options.includePaths) {
         includePaths = includePaths.concat(options.includePaths);
     }
 
-    if (options.pluginName !== options.standalone) {
+    // If options.standalone isn't set, then set it to be equal to the options.pluginName
+    if (options.standalone) {
         standalone = options.standalone;
+    } else {
+        standalone = options.pluginName;
     }
+
+    console.log(standalone);
 
     gulp.task('clean', (cb) => {
         rimraf('./dist', cb)
@@ -102,6 +107,7 @@ function GulpJumpstart(gulp, userOptions) {
 
     gulp.task('watch', ['build'], () => {
         browsersync.init({
+            open: false,
             notify: false,
             port: 9000,
             server: {
