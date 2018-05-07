@@ -1,6 +1,6 @@
 {
   "name": "gulp-jumpstart",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Gulp starter template for Javascript plugin development",
   "main": "GulpJumpstart.js",
   "author": "Ozy Wu-Li <ozy.wu.li@gmail.com>",
