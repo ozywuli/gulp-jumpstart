@@ -31,6 +31,7 @@ function GulpJumpstart(gulp, userOptions) {
     let includePaths = ['.', 'node_modules'];
     let standalone;
 
+    // Concat additional paths for compilation
     if (options.includePaths) {
         includePaths = includePaths.concat(options.includePaths);
     }
@@ -59,6 +60,7 @@ function GulpJumpstart(gulp, userOptions) {
             sound: 'Basso'
         })
         console.log(arg)
+        this.emit('end');
     }
 
     gulp.task('build:scss', () => {
@@ -66,10 +68,11 @@ function GulpJumpstart(gulp, userOptions) {
         .pipe(sass({
             outputStyle: 'nested',
             precision: 10,
-            includePaths: ['.', 'node_modules'],
+            includePaths: includePaths,
             onError: showError
         }).on('error', function(error) {
-            showError(error)
+            showError(error);
+            this.emit('end');
         }))
         .pipe(postcss([
             autoprefixer({
@@ -87,7 +90,7 @@ function GulpJumpstart(gulp, userOptions) {
                 standalone: standalone
             })
             .transform("babelify", {
-                presets: ["es2015"]
+                presets: ["env"]
             })
             .bundle()
                 .on('error', showError)
