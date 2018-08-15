@@ -114,7 +114,13 @@ function GulpJumpstart(gulp, userOptions) {
             notify: false,
             port: 9000,
             server: {
-                baseDir: [path.join('examples', 'pages'), path.join('examples', 'assets'), 'dist'],
+                baseDir: [
+                    path.join('tests'),
+                    path.join('examples', 'tests'),
+                    path.join('examples', 'pages'), 
+                    path.join('examples', 'assets'), 
+                    'dist'
+                ],
                 directory: true
             }
         })
