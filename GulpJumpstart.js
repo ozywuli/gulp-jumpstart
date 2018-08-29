@@ -21,14 +21,24 @@ const util = require('gulp-util')
  */
 function GulpJumpstart(gulp, userOptions) {
 
+    /**
+     * Default options
+     * @desc Default plugin options
+     * @access Private
+     */
     let defaultOptions = {
         pluginName: 'Plugin',
         standalone: undefined,
         includePaths: undefined
     };
 
+    // Merge/overwrite default options with user options
     let options = Object.assign(defaultOptions, userOptions);
+    
+    // Included paths
     let includePaths = ['.', 'node_modules'];
+
+    // Standalone state;
     let standalone;
 
     // Concat additional paths for compilation
@@ -43,8 +53,6 @@ function GulpJumpstart(gulp, userOptions) {
         standalone = options.pluginName;
     }
 
-    console.log(standalone);
-
     gulp.task('clean', (cb) => {
         rimraf('./dist', cb)
     })
@@ -53,6 +61,11 @@ function GulpJumpstart(gulp, userOptions) {
         gulp.start('build:js', 'build:scss')
     })
 
+    /**
+     * Show error
+     * @desc Show error message
+     * @access Private
+     */
     function showError(arg) {
         notifier.notify({
             title: 'Error',
