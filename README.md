@@ -4,6 +4,10 @@
 
 A Gulp template for setting up a development environment and build pipeline for your jQuery plugin.
 
+## Prerequisites
+
+
+
 ----
 
 ## Installation

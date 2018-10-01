@@ -1,7 +1,6 @@
 const path = require('path')
 
 const autoprefixer = require('autoprefixer')
-const babelify = require('babelify')
 const browserify = require('browserify')
 const browsersync = require('browser-sync').create()
 const buffer = require('vinyl-buffer')
@@ -13,14 +12,13 @@ const sass = require('gulp-sass')
 const source = require('vinyl-source-stream')
 const sourcemaps = require('gulp-sourcemaps')
 const uglify = require('gulp-uglify')
-const util = require('gulp-util')
+// const util = require('gulp-util')
 
 /**
  * Constructor
  * 
  */
 function GulpJumpstart(gulp, userOptions) {
-
     /**
      * Default options
      * @desc Default plugin options
@@ -57,10 +55,6 @@ function GulpJumpstart(gulp, userOptions) {
         rimraf('./dist', cb)
     })
 
-    gulp.task('build', ['clean'], () => {
-        gulp.start('build:js', 'build:scss')
-    })
-
     /**
      * Show error
      * @desc Show error message
@@ -78,32 +72,38 @@ function GulpJumpstart(gulp, userOptions) {
 
     gulp.task('build:scss', () => {
         return gulp.src(path.join('examples', 'assets', 'styles.scss'))
-        .pipe(sass({
-            outputStyle: 'nested',
-            precision: 10,
-            includePaths: includePaths,
-            onError: showError
-        }).on('error', function(error) {
-            showError(error);
-            this.emit('end');
-        }))
-        .pipe(postcss([
-            autoprefixer({
-                browsers: ['last 2 versions', 'Firefox ESR', 'Explorer >= 9', 'Android >= 4.0', '> 2%']
-            })
-        ]))
-        .pipe(gulp.dest(path.join('examples', 'assets')))
-        .pipe(browsersync.stream({match: '**/*.css'}))
+            .pipe(sass({
+                outputStyle: 'nested',
+                precision: 10,
+                includePaths: includePaths,
+                onError: showError
+            }).on('error', function(error) {
+                showError(error);
+                this.emit('end');
+            }))
+            .pipe(postcss([
+                autoprefixer({
+                    browsers: [
+                        'last 2 versions', 
+                        'Firefox ESR', 
+                        'Explorer >= 9', 
+                        'Android >= 4.0', 
+                        '> 2%'
+                    ]
+                })
+            ]))
+            .pipe(gulp.dest(path.join('examples', 'assets')))
+            .pipe(browsersync.stream({match: '**/*.css'}))
     })
 
-    gulp.task('build:js', () => {
+    gulp.task('build:js', (done) => {
         return browserify({
                 entries: path.join('src', `${options.pluginName}.js`), 
                 debug: false, 
                 standalone: standalone
             })
-            .transform("babelify", {
-                presets: ["env"]
+            .transform('babelify', {
+                presets: ['env']
             })
             .bundle()
                 .on('error', showError)
@@ -121,7 +121,9 @@ function GulpJumpstart(gulp, userOptions) {
             .pipe(browsersync.stream({match: path.join('**','*.js')}))
     })
 
-    gulp.task('watch', ['build'], () => {
+    gulp.task('build', gulp.series('clean', 'build:js', 'build:scss'))
+
+    gulp.task('watch', () => {
         browsersync.init({
             open: false,
             notify: false,
@@ -137,12 +139,19 @@ function GulpJumpstart(gulp, userOptions) {
                 directory: true
             }
         })
-        gulp.watch(path.join('src', '*.js'), ['build:js'])
-        gulp.watch(path.join('examples', 'assets', '*.scss'), ['build:scss'])
-        gulp.watch(path.join('examples', 'pages', '*.html'), browsersync.reload)
+        gulp.watch(path.join('src', '*.js'), gulp.series('build:js'))
+        gulp.watch(
+            path.join('examples', 'assets', '*.scss'), 
+            gulp.series('build:scss')
+        )
+        gulp.watch(
+            path.join('examples', 'pages', '*.html'), 
+            browsersync.reload
+        )
     })
 
-    gulp.task('default', ['watch'])
-}
+    gulp.task('default', gulp.series('build', 'watch'))
+    
+} // GulpJumpStart
 
 module.exports = GulpJumpstart;
