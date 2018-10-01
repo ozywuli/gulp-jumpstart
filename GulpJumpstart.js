@@ -45,11 +45,7 @@ function GulpJumpstart(gulp, userOptions) {
     }
 
     // If options.standalone isn't set, then set it to be equal to the options.pluginName
-    if (options.standalone) {
-        standalone = options.standalone;
-    } else {
-        standalone = options.pluginName;
-    }
+    standalone = options.standlone ? options.standalone : options.pluginName
 
     gulp.task('clean', (cb) => {
         rimraf('./dist', cb)

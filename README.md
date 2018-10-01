@@ -6,13 +6,14 @@ A Gulp template for setting up a development environment and build pipeline for 
 
 ## Prerequisites
 
-
+Node 9.4.0
+NPM 5.6.0
 
 ----
 
 ## Installation
 
-```sh
+```bash
 npm install --save-dev gulp-jumpstart
 ```
 
@@ -26,4 +27,3 @@ npm install --save-dev gulp-jumpstart
 
 ## Todos
 
-- Upgrade to Gulp 4
