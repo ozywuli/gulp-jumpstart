@@ -6,6 +6,12 @@ A Gulp template for setting up a development environment and build pipeline for 
 
 ----
 
+## Requirements
+
+Node: 10.15.3
+Gulp: 4.0
+Gulp CLI: 2.1
+
 ## Installation
 
 ```sh
@@ -21,5 +27,3 @@ npm install --save-dev gulp-jumpstart
 - Directories for demos, assets, and tests
 
 ## Todos
-
-- Upgrade to Gulp 4
