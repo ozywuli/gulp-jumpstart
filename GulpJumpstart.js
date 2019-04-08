@@ -1,23 +1,24 @@
 const path = require('path')
 
-const autoprefixer = require('autoprefixer')
+const autoprefixer = require('autoprefixer');
 const babelify = require('babelify')
-const browserify = require('browserify')
-const browsersync = require('browser-sync').create()
-const buffer = require('vinyl-buffer')
-const notifier = require('node-notifier')
-const postcss = require('gulp-postcss')
+const babel = require('gulp-babel');
+const browserify = require('browserify');
+const browsersync = require('browser-sync').create();
+const buffer = require('vinyl-buffer');
+const notifier = require('node-notifier');
+const postcss = require('gulp-postcss');
 const rename = require('gulp-rename');
-const rimraf = require('rimraf')
-const sass = require('gulp-sass')
-const source = require('vinyl-source-stream')
-const sourcemaps = require('gulp-sourcemaps')
-const uglify = require('gulp-uglify')
-const util = require('gulp-util')
+const rimraf = require('rimraf');
+const sass = require('gulp-sass');
+const source = require('vinyl-source-stream');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const util = require('gulp-util');
 
 /**
  * Constructor
- * 
+ *
  */
 function GulpJumpstart(gulp, userOptions) {
 
@@ -34,7 +35,7 @@ function GulpJumpstart(gulp, userOptions) {
 
     // Merge/overwrite default options with user options
     let options = Object.assign(defaultOptions, userOptions);
-    
+
     // Included paths
     let includePaths = ['.', 'node_modules'];
 
@@ -54,12 +55,10 @@ function GulpJumpstart(gulp, userOptions) {
     }
 
     gulp.task('clean', (cb) => {
-        rimraf('./dist', cb)
-    })
+        return rimraf('./dist', cb);
+    });
 
-    gulp.task('build', ['clean'], () => {
-        gulp.start('build:js', 'build:scss')
-    })
+    gulp.task('build', gulp.series('clean', gulp.parallel(buildSCSS, buildJS)));
 
     /**
      * Show error
@@ -74,39 +73,35 @@ function GulpJumpstart(gulp, userOptions) {
         })
         console.log(arg)
         this.emit('end');
+    };
+
+    function buildSCSS() {
+        return gulp.src(path.join('examples', 'assets', 'styles.scss'))
+            .pipe(sass({
+                outputStyle: 'nested',
+                precision: 10,
+                includePaths: includePaths,
+                onError: showError
+            }).on('error', function(error) {
+                showError(error);
+                this.emit('end');
+            }))
+            .pipe(postcss([
+                autoprefixer({
+                    browsers: ['last 2 versions', 'Firefox ESR', 'Explorer >= 9', 'Android >= 4.0', '> 2%']
+                })
+            ]))
+            .pipe(gulp.dest(path.join('examples', 'assets')))
+            .pipe(browsersync.stream({match: '**/*.css'}))
     }
 
-    gulp.task('build:scss', () => {
-        return gulp.src(path.join('examples', 'assets', 'styles.scss'))
-        .pipe(sass({
-            outputStyle: 'nested',
-            precision: 10,
-            includePaths: includePaths,
-            onError: showError
-        }).on('error', function(error) {
-            showError(error);
-            this.emit('end');
-        }))
-        .pipe(postcss([
-            autoprefixer({
-                browsers: ['last 2 versions', 'Firefox ESR', 'Explorer >= 9', 'Android >= 4.0', '> 2%']
-            })
-        ]))
-        .pipe(gulp.dest(path.join('examples', 'assets')))
-        .pipe(browsersync.stream({match: '**/*.css'}))
-    })
-
-    gulp.task('build:js', () => {
+    function buildJS() {
         return browserify({
-                entries: path.join('src', `${options.pluginName}.js`), 
-                debug: false, 
-                standalone: standalone
-            })
-            .transform("babelify", {
-                presets: ["env"]
-            })
-            .bundle()
-                .on('error', showError)
+            entries: path.join('src', `${options.pluginName}.js`),
+            debug: false,
+            standalone: standalone
+        })
+            .bundle().on('error', showError)
             .pipe(source(`${options.pluginName}.js`))
             .pipe(buffer())
             .pipe(gulp.dest('dist'))
@@ -114,14 +109,14 @@ function GulpJumpstart(gulp, userOptions) {
             .pipe(sourcemaps.init({
                 loadMaps: true
             }))
-            .pipe(uglify())
-                .on('error', showError)
+            .pipe(babel())
+            .pipe(uglify()).on('error', showError)
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest('dist'))
             .pipe(browsersync.stream({match: path.join('**','*.js')}))
-    })
+    }
 
-    gulp.task('watch', ['build'], () => {
+    function watch(done) {
         browsersync.init({
             open: false,
             notify: false,
@@ -130,19 +125,30 @@ function GulpJumpstart(gulp, userOptions) {
                 baseDir: [
                     path.join('tests'),
                     path.join('examples', 'tests'),
-                    path.join('examples', 'pages'), 
-                    path.join('examples', 'assets'), 
+                    path.join('examples', 'pages'),
+                    path.join('examples', 'assets'),
                     'dist'
                 ],
                 directory: true
             }
         })
-        gulp.watch(path.join('src', '*.js'), ['build:js'])
-        gulp.watch(path.join('examples', 'assets', '*.scss'), ['build:scss'])
-        gulp.watch(path.join('examples', 'pages', '*.html'), browsersync.reload)
-    })
+        gulp.watch(
+            path.join('src', '*.js'),
+            gulp.series(buildJS)
+        );
+        gulp.watch(
+            path.join('examples', 'assets', '*.scss'),
+            gulp.series(buildSCSS)
+        );
+        gulp.watch(
+            path.join('examples', 'pages', '*.html'),
+            browsersync.reload
+        );
 
-    gulp.task('default', ['watch'])
+        done();
+    }
+
+    gulp.task('default', gulp.series('build', watch));
 }
 
 module.exports = GulpJumpstart;
